@@ -42,19 +42,23 @@ const changeTaskService = async(taskDetails) => {
         let newtask = await utils.changeTask(taskDetails);
         return newtask;
     } catch (err) {
-        throw Error(err.message);
+        throw err;
     }
 }
 
-// const getNoteByIdService = async (id) => await utils.getNoteById(id);
-// const deleteNoteService = async(id) => await utils.deleteNote(id);
+const deleteTaskService = async(task) => {
+    try{
+        return await utils.deleteTask(task);
+    } catch(err) {
+        throw err;
+    }
+}
 
 module.exports = {
   addTaskService,
   createListService,
   getAllListsService,
   getTasksFromListService,
-//   getNoteByIdService,
   changeTaskService,
-//   deleteNoteService,
+  deleteTaskService,
 };

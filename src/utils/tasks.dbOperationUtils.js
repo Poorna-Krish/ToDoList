@@ -67,10 +67,27 @@ const changeTask = async (taskDetails) => {
         throw new Error(`Task Error: ${err.message}`);
     }
 }
+
+const deleteTask = async (taskDetails) => {
+    if(!taskDetails) throw new InputError('InputError','Invalid, enter valid task details!', 400);
+    if(!taskDetails.id) throw new InputError('InputError','Invalid, enter valid task details!', 400);
+    if(typeof taskDetails.id !== 'number') throw new InputError('InputError','Invalid, task Id and list Id must be integer!', 400);
+    try{
+        const deletedTask = await Tasks.destroy({
+            where: {
+              id: taskDetails.id,
+            }
+          });
+        return deletedTask;
+    } catch (err) {
+        throw new Error(`Task Error: ${err.message}`);
+    }
+}
 module.exports = {
     createTask,
     createList,
     getAllLists,
     getTasksFromList,
     changeTask,
-}
+    deleteTask
+};

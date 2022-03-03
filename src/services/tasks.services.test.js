@@ -76,3 +76,18 @@ describe('ChangeTaskService Function', () => {
         }
     });
 });
+describe('DeleteTaskService Function', () => {
+    const testTask = {listId: 1, id: 1, title: 'title1'};
+    it('should call util deleteTask function', async () => {
+        jest.spyOn(utils,'deleteTask').mockResolvedValue(testTask);
+        expect(await services.deleteTaskService(testTask)).toBe(testTask);
+    });
+    it('should throw error if some error', async () => {
+        jest.spyOn(utils,'deleteTask').mockRejectedValue(new Error('Some Error!'));
+        try{
+            await services.deleteTaskService({}); 
+        } catch(err) {
+            expect(err.message).toBe('Some Error!');
+        }
+    });
+});

@@ -166,4 +166,41 @@ describe('ChangeTask Function', () => {
             expect(err.message).toBe(`Task Error: Some error!`);
         }
     });
-})
+});
+
+describe('DeleteTask Function', () => {
+    const testTask = {id: 1, listId: 1};
+    it('should return deleted task once deleted', async () => {
+        jest.spyOn(Tasks,'destroy').mockResolvedValue(testTask);
+        expect(await utils.deleteTask(testTask)).toBe(testTask);
+    });
+    it('should return error if input not given', async () => {
+        try{
+            await utils.deleteTask();
+        }catch(err) {
+            expect(err.message).toBe('Invalid, enter valid task details!');
+        }
+    });
+    it('should return error if task Id not given', async () => {
+        try{
+            await utils.deleteTask({listId: 1});
+        }catch(err) {
+            expect(err.message).toBe('Invalid, enter valid task details!');
+        }
+    });
+    it('should return error if task Id not number', async () => {
+        try{
+            await utils.deleteTask({id: 'hi', listId: 1});
+        }catch(err) {
+            expect(err.message).toBe('Invalid, task Id and list Id must be integer!');
+        }
+    });
+    it('should return error if other internal error', async () => {
+        jest.spyOn(Tasks,'destroy').mockRejectedValue(new Error('Some error!'));
+        try{
+            await utils.deleteTask(testTask);
+        } catch(err) {
+            expect(err.message).toBe(`Task Error: Some error!`);
+        }
+    });
+});

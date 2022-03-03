@@ -87,7 +87,7 @@ describe('GetTasksFromListHandler Function', () => {
     });
 });
 describe('ChangeTaskHandler Function', () => {
-    it('should return success message with status 200 if task created', async () => {
+    it('should return success message with status 200 if task changed', async () => {
         jest.spyOn(services,'changeTaskService').mockResolvedValue([null, {listId: 1, id: 1}]);
         const res = mockResponse();
         const req = {body: {listId: 1, id: 1}};
@@ -101,6 +101,27 @@ describe('ChangeTaskHandler Function', () => {
         const req = {body: {listId: 1, id: 1}};
         try{
             await handlers.changeTaskHandler(req, res);
+        } catch (err) {
+            expect(res.status).toHaveBeenCalledWith(err.httpCode);
+            expect(res.json).toHaveBeenCalledWith({error: `There's something wrong! GetTasks Failed: \n Error: Some error`});
+        }
+    });
+});
+describe('DeleteTaskHandler Function', () => {
+    it('should return success message with status 200 if task deleted', async () => {
+        jest.spyOn(services,'deleteTaskService').mockResolvedValue([null, {listId: 1, id: 1}]);
+        const res = mockResponse();
+        const req = {body: {listId: 1, id: 1}};
+        await handlers.deleteTaskHandler(req,res);
+        expect(res.json).toHaveBeenCalledWith({deletedTask: {listId: 1, id: 1}});
+        expect(res.status).toHaveBeenCalledWith(200);
+    });
+    it('should return error if some other error occurs', async() => {
+        jest.spyOn(services,'deleteTaskService').mockRejectedValue(new Error(`Some error`));
+        const res = mockResponse();
+        const req = {body: {listId: 1, id: 1}};
+        try{
+            await handlers.deleteTaskHandler(req, res);
         } catch (err) {
             expect(res.status).toHaveBeenCalledWith(err.httpCode);
             expect(res.json).toHaveBeenCalledWith({error: `There's something wrong! GetTasks Failed: \n Error: Some error`});

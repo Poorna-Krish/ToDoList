@@ -57,9 +57,14 @@ const changeTaskHandler = async(req, res) => {
 }
 
 const deleteTaskHandler = async (req, res) => {
-    // const id = req.body.id;
-    // await services.deleteNoteService(id);
-    // res.send(`Note with id ${id} has been successfully deleted!`).status(200);
+    const taskDetails = req.body;
+    try{
+        const deleted = await services.deleteTaskService(taskDetails);
+        if(deleted === 0) res.json({message: `No task with that ID!`});
+        else res.json({deletedTask: `Deleted Task with Id ${taskDetails.id}!`}).status(200);
+    } catch(err) {
+        res.json({error:`There's something wrong! Task Failed: Error: ${err.message}`}).status(err.httpCode);
+    }
 }
 
 module.exports = {

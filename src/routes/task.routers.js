@@ -7,7 +7,7 @@ router.get('/', todoHandlers.getAllListsHandler);
 router.post('/', todoHandlers.createListHandler);
 router.post('/task', todoHandlers.addTaskHandler);
 router.put('/task',todoHandlers.changeTaskHandler);
-router.put('/task',todoHandlers.deleteTaskHandler);
+router.delete('/task',todoHandlers.deleteTaskHandler);
 
 
 // router.delete('/:id', tasksHandlers.deleteNoteHandler);
