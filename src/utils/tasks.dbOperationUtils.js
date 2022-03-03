@@ -38,12 +38,16 @@ const getAllLists = async () => {
 }
 
 const getTasksFromList = async(searchListId) => {
+    if(!searchListId) throw new InputError('InputError','Invalid, enter valid List Id!', 400);
+    if(typeof searchListId !== 'number') throw new InputError('InputError','Invalid, List Id must be integer!', 400);
     try{
-        return await Tasks.findAll({
+        const tasks = await Tasks.findAll({
             where:{
                 listId: searchListId
             }
         });
+        if(tasks.length === 0) throw new InputError('InputError','Invalid, no List of that Id exists!', 400);
+        return tasks;
     } catch(err) {
         throw new Error(`Task Error: ${err.message}`);
     }

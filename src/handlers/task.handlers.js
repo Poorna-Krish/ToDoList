@@ -7,7 +7,6 @@ const getTasksFromListHandler = async(req, res) => {
         const tasks = await services.getTasksFromListService(id);
         res.status(200).json(tasks);
     } catch (err) {
-        console.log(`Error: ${err.message}, code: ${err.httpCode}`);
         res.status(err.httpCode).json({error: `There's something wrong! GetTasks Failed: \n Error: ${err.message}`});
     }
 }
@@ -50,7 +49,8 @@ const changeTaskHandler = async(req, res) => {
     const taskDetails = req.body;
     try{
         const modifiedTask = await services.changeTaskService(taskDetails);
-        res.json(modifiedTask[1]).status(200);
+        if(modifiedTask[1].length === 0) res.json({message: `No task with that Id or listId!`}).status(400);
+        else res.json(modifiedTask[1]).status(200);
     } catch(err) {
         res.json({error:`There's something wrong! Task Failed: \n Error: ${err.message}`}).status(err.httpCode);
     }

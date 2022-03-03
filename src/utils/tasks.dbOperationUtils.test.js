@@ -102,6 +102,42 @@ describe('GetAllLists function', () => {
         }
     })
 });
+describe('GetTasksFromList function', () => {
+    it('should return all the tasks in the list in an array', async() =>{
+        jest.spyOn(Tasks,'findAll').mockResolvedValue([1,2,3]);
+        expect(await utils.getTasksFromList()).toEqual([1,2,3]);
+    });
+    it('should return message if list  does not exist', async() =>{
+        jest.spyOn(Tasks,'findAll').mockResolvedValue(0);
+        try{
+            await utils.getTasksFromList(0);
+        } catch(err) {
+            expect(err.message).toBe('Invalid, no List of that Id exists!');
+        }
+    });
+    it('should return error if input not given', async () => {
+        try{
+            await utils.getTasksFromList();
+        }catch(err) {
+            expect(err.message).toBe('Invalid, enter valid List Id!!');
+        }
+    });
+    it('should return error if List Id not number', async () => {
+        try{
+            await utils.getTasksFromList('hi');
+        }catch(err) {
+            expect(err.message).toBe('Invalid, List Id must be integer!');
+        }
+    });
+    it('should throw error if some internal error', async () => {
+        jest.spyOn(Tasks,'findAll').mockRejectedValue(new Error('Some error!'));
+        try{
+            await utils.getTasksFromList();
+        } catch(err) {
+            expect(err.message).toBe('Task Error: Some error!');
+        }
+    })
+});
 
 describe('ChangeTask Function', () => {
     const testTask = {id: 1, listId: 1, title: 'title1'};
