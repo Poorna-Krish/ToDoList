@@ -6,7 +6,10 @@ router.get('/:id',todoHandlers.getTasksFromListHandler);
 router.get('/', todoHandlers.getAllListsHandler);
 router.post('/', todoHandlers.createListHandler);
 router.post('/task', todoHandlers.addTaskHandler);
-// router.put('/task/:id',tasksHandlers.changeNoteHandler);
+router.put('/task',todoHandlers.changeTaskHandler);
+router.put('/task',todoHandlers.deleteTaskHandler);
+
+
 // router.delete('/:id', tasksHandlers.deleteNoteHandler);
 
 module.exports = {

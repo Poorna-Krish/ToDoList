@@ -30,9 +30,11 @@ describe('AddTaskService Function', () => {
     });
 });
 describe('GetAllListsService Function', () => {
+    const testList = [{id:1, name:'name1'},{id:2,name:'name2'}];
+    const testResult = [{1: 'name1'},{2: 'name2'}];
     it('should call util getAllLists function', async () => {
-        jest.spyOn(utils,'getAllLists').mockResolvedValue();
-        
+        jest.spyOn(utils,'getAllLists').mockResolvedValue(testList);
+        expect(await services.getAllListsService()).toEqual(testResult);
     });
     it('should throw error if some error', async () => {
         jest.spyOn(utils,'getAllLists').mockRejectedValue(new Error('Some Error!'));
@@ -44,14 +46,31 @@ describe('GetAllListsService Function', () => {
     });
 });
 describe('GetTasksFromListService Function', () => {
+    const testTasks = [{id: 1, title:'title1'},{id: 2, title:'title2'}];
+    const testResultTasks = [{1: 'title1'}, {2: 'title2'}];
     it('should call util getTasksFromList function', async () => {
-        jest.spyOn(utils,'getTasksFromList').mockResolvedValue();
-        
+        jest.spyOn(utils,'getTasksFromList').mockResolvedValue(testTasks);
+        expect(await services.getTasksFromListService(1)).toEqual(testResultTasks);
     });
     it('should throw error if some error', async () => {
         jest.spyOn(utils,'getTasksFromList').mockRejectedValue(new Error('Some Error!'));
         try{
             await services.getTasksFromListService({}); 
+        } catch(err) {
+            expect(err.message).toBe('Some Error!');
+        }
+    });
+});
+describe('ChangeTaskService Function', () => {
+    const testTask = {listId: 1, id: 1, title: 'title1'};
+    it('should call util changeTask function', async () => {
+        jest.spyOn(utils,'changeTask').mockResolvedValue(testTask);
+        expect(await services.changeTaskService(testTask)).toBe(testTask);
+    });
+    it('should throw error if some error', async () => {
+        jest.spyOn(utils,'changeTask').mockRejectedValue(new Error('Some Error!'));
+        try{
+            await services.changeTaskService({}); 
         } catch(err) {
             expect(err.message).toBe('Some Error!');
         }

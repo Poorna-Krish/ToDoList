@@ -43,16 +43,35 @@ const getTasksFromList = async(searchListId) => {
             where:{
                 listId: searchListId
             }
-        })
+        });
     } catch(err) {
-        console.log(err.message);
         throw new Error(`Task Error: ${err.message}`);
     }
 }
 
+const changeTask = async (taskDetails) => {
+    if(!taskDetails) throw new InputError('InputError','Invalid, enter valid task details!', 400);
+    if(!taskDetails.id || !taskDetails.listId || !taskDetails.title) throw new InputError('InputError','Invalid, enter valid task details!', 400);
+    if(typeof taskDetails.id !== 'number' || typeof taskDetails.listId !== 'number') throw new InputError('InputError','Invalid, task Id and list Id must be integer!', 400);
+    if(typeof taskDetails.title !== 'string') throw new InputError('InputError','Invalid, task title must be string!', 400);
+    try{
+        const task = await Tasks.update({ title: taskDetails.title }, {
+            where: {
+              id: taskDetails.id,
+              listId: taskDetails.listId
+            },
+            returning: true,
+            plain: true
+        });
+        return task;
+    } catch (err) {
+        throw new Error(`Task Error: ${err.message}`);
+    }
+}
 module.exports = {
     createTask,
     createList,
     getAllLists,
     getTasksFromList,
+    changeTask,
 }

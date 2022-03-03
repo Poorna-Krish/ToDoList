@@ -1,4 +1,5 @@
 const utils = require('../utils/tasks.dbOperationUtils');
+const {InputError} = require('../errors/tasks.errors');
 
 const createListService = async(newList) => {
     try{
@@ -29,13 +30,23 @@ const getTasksFromListService = async (listId) => {
     try{
         let tasks = await utils.getTasksFromList(listId);
         tasks = tasks.map((task) => {return {[task.id] : task.title}});
+        if(tasks.length === 0) throw new InputError('InputError', `No Tasks at that List ID!`, 400);
         return tasks;
+    } catch (err) {
+        throw err;
+    }
+}
+
+const changeTaskService = async(taskDetails) => {
+    try{
+        let newtask = await utils.changeTask(taskDetails);
+        return newtask;
     } catch (err) {
         throw Error(err.message);
     }
 }
+
 // const getNoteByIdService = async (id) => await utils.getNoteById(id);
-// const changeNoteService = async(id, newNoteDetails) => await utils.changeNote(id, newNoteDetails);
 // const deleteNoteService = async(id) => await utils.deleteNote(id);
 
 module.exports = {
@@ -44,6 +55,6 @@ module.exports = {
   getAllListsService,
   getTasksFromListService,
 //   getNoteByIdService,
-//   changeNoteService,
+  changeTaskService,
 //   deleteNoteService,
 };

@@ -87,6 +87,7 @@ describe('CreateTask Function', () => {
         }
     });
 });
+
 describe('GetAllLists function', () => {
     it('should return all the Lists in an array', async() =>{
         jest.spyOn(Lists,'findAll').mockResolvedValue([1,2,3]);
@@ -101,3 +102,68 @@ describe('GetAllLists function', () => {
         }
     })
 });
+
+describe('ChangeTask Function', () => {
+    const testTask = {id: 1, listId: 1, title: 'title1'};
+    it('should return modified task if changed', async () => {
+        jest.spyOn(Tasks,'update').mockResolvedValue(testTask);
+        expect(await utils.changeTask(testTask)).toBe(testTask);
+    });
+    it('should return error if input not given', async () => {
+        try{
+            await utils.changeTask();
+        }catch(err) {
+            expect(err.message).toBe('Invalid, enter valid task details!');
+        }
+    });
+    it('should return error if task Id not given', async () => {
+        try{
+            await utils.changeTask({listId: 1, title: 'title1'});
+        }catch(err) {
+            expect(err.message).toBe('Invalid, enter valid task details!');
+        }
+    });
+    it('should return error if list Id not given', async () => {
+        try{
+            await utils.changeTask({id: 1, title: 'title1'});
+        }catch(err) {
+            expect(err.message).toBe('Invalid, enter valid task details!');
+        }
+    });
+    it('should return error if task title not given', async () => {
+        try{
+            await utils.changeTask({id: 1, listId: 1});
+        }catch(err) {
+            expect(err.message).toBe('Invalid, enter valid task details!');
+        }
+    });
+    it('should return error if task Id not number', async () => {
+        try{
+            await utils.changeTask({id: 'hi', listId: 1, title: 'title1'});
+        }catch(err) {
+            expect(err.message).toBe('Invalid, task Id and list Id must be integer!');
+        }
+    });
+    it('should return error if list Id not number', async () => {
+        try{
+            await utils.changeTask({listId: 'hi', id: 1, title: 'title1'});
+        }catch(err) {
+            expect(err.message).toBe('Invalid, task Id and list Id must be integer!');
+        }
+    });
+    it('should return error if task title not string', async () => {
+        try{
+            await utils.changeTask({id: 1, listId: 1, title: 1});
+        }catch(err) {
+            expect(err.message).toBe('Invalid, task title must be string!');
+        }
+    });
+    it('should return error if other internal error', async () => {
+        jest.spyOn(Tasks,'update').mockRejectedValue(new Error('Some error!'));
+        try{
+            await utils.changeTask(testTask);
+        } catch(err) {
+            expect(err.message).toBe(`Task Error: Some error!`);
+        }
+    });
+})
