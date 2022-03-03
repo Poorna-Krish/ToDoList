@@ -88,11 +88,11 @@ describe('GetTasksFromListHandler Function', () => {
 });
 describe('ChangeTaskHandler Function', () => {
     it('should return success message with status 200 if task created', async () => {
-        jest.spyOn(services,'changeTaskService').mockResolvedValue({listId: 1, id: 1});
+        jest.spyOn(services,'changeTaskService').mockResolvedValue([null, {listId: 1, id: 1}]);
         const res = mockResponse();
         const req = {body: {listId: 1, id: 1}};
         await handlers.changeTaskHandler(req,res);
-        expect(res.json).toHaveBeenCalledWith({success:`Task from List 1 with ID 1 changed successfully!`});
+        expect(res.json).toHaveBeenCalledWith({listId: 1, id: 1});
         expect(res.status).toHaveBeenCalledWith(200);
     });
     it('should return error if some other error occurs', async() => {

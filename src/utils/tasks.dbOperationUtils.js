@@ -61,7 +61,6 @@ const changeTask = async (taskDetails) => {
               listId: taskDetails.listId
             },
             returning: true,
-            plain: true
         });
         return task;
     } catch (err) {
