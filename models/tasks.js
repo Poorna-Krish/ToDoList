@@ -3,27 +3,33 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Lists extends Model {
+  class Tasks extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate({Tasks, Lists}) {
-      Lists.hasMany(Tasks, {
-        foreignKey: 'list_id'
+      Tasks.belongsTo(Lists, {
+        foreignKey:'list_id',
+        onDelete: 'cascade'
       })
     }
   }
-  Lists.init({
-    name: {
+  Tasks.init({
+    listId: {
+      type: DataTypes.INTEGER,
+      field:'list_id',
+      foreignKey: 'list_id',
+      allowNull: false
+    },
+    title: {
       type: DataTypes.STRING,
-      field:'list_name',
       allowNull: false
     }
   }, {
     sequelize,
-    modelName: 'Lists',
+    modelName: 'Tasks',
   });
-  return Lists;
+  return Tasks;
 };
