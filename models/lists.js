@@ -14,7 +14,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Lists.init({
-    list_name: DataTypes.STRING
+    name: {
+      type: DataTypes.STRING,
+      field:'list_name'
+    }
   }, {
     sequelize,
     modelName: 'Lists',
