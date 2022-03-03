@@ -67,6 +67,16 @@ const deleteTaskHandler = async (req, res) => {
     }
 }
 
+const deleteListHandler = async(req, res) => {
+    const listId = req.body.id;
+    try{
+        await services.deleteListService(listId);
+        res.json({deletedList: `Deleted List with Id ${listId}!`}).status(200);
+    } catch(err) {
+        res.json({error:`There's something wrong! List Failed: Error: ${err.message}`}).status(err.httpCode);
+    }
+}
+
 module.exports = {
     getTasksFromListHandler,
     getAllListsHandler,
@@ -74,4 +84,5 @@ module.exports = {
     createListHandler,
     changeTaskHandler,
     deleteTaskHandler,
+    deleteListHandler
 };

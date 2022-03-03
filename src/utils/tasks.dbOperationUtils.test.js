@@ -204,3 +204,40 @@ describe('DeleteTask Function', () => {
         }
     });
 });
+
+describe('DeleteList Function', () => {
+    it('should return deleted list once deleted', async () => {
+        jest.spyOn(Lists,'destroy').mockResolvedValue(1);
+        expect(await utils.deleteList(1)).toBe(1);
+    });
+    it('should return deleted list if no list with that Id exists', async () => {
+        jest.spyOn(Lists,'destroy').mockResolvedValue(0);
+        try{
+            await utils.deleteList(1);
+        } catch(err) {
+            expect(err.message).toBe(`List Error: Invalid, no List of that Id exists!`);
+        }
+    });
+    it('should return error if input not given', async () => {
+        try{
+            await utils.deleteList();
+        }catch(err) {
+            expect(err.message).toBe('Invalid, enter valid List Id!');
+        }
+    });
+    it('should return error if list Id not number', async () => {
+        try{
+            await utils.deleteList('hi');
+        }catch(err) {
+            expect(err.message).toBe('Invalid, List Id must be integer!');
+        }
+    });
+    it('should return error if other internal error', async () => {
+        jest.spyOn(Lists,'destroy').mockRejectedValue(new Error('Some error!'));
+        try{
+            await utils.deleteList(1);
+        } catch(err) {
+            expect(err.message).toBe(`List Error: Some error!`);
+        }
+    });
+});

@@ -54,6 +54,14 @@ const deleteTaskService = async(task) => {
     }
 }
 
+const deleteListService = async(listId) => {
+    try{
+        return await utils.deleteList(listId);
+    } catch(err) {
+        throw err;
+    }
+}
+
 module.exports = {
   addTaskService,
   createListService,
@@ -61,4 +69,5 @@ module.exports = {
   getTasksFromListService,
   changeTaskService,
   deleteTaskService,
+  deleteListService
 };

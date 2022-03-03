@@ -83,11 +83,29 @@ const deleteTask = async (taskDetails) => {
         throw new Error(`Task Error: ${err.message}`);
     }
 }
+
+const deleteList = async(listId) => {
+    if(!listId) throw new InputError('InputError','Invalid, enter valid List Id!', 400);
+    if(typeof listId !== 'number') throw new InputError('InputError','Invalid, List Id must be integer!', 400);
+    try{
+        const deletedList = await Lists.destroy({
+            where: {
+              id: listId,
+            }
+          });
+        if(deletedList === 0) throw new InputError('InputError','Invalid, no List of that Id exists!', 400);
+        return deletedList;
+    } catch (err) {
+        throw new Error(`List Error: ${err.message}`);
+    }
+}
+
 module.exports = {
     createTask,
     createList,
     getAllLists,
     getTasksFromList,
     changeTask,
-    deleteTask
+    deleteTask,
+    deleteList
 };

@@ -91,3 +91,17 @@ describe('DeleteTaskService Function', () => {
         }
     });
 });
+describe('DeleteListService Function', () => {
+    it('should call util deleteList function', async () => {
+        jest.spyOn(utils,'deleteList').mockResolvedValue(1);
+        expect(await services.deleteListService(1)).toBe(1);
+    });
+    it('should throw error if some error', async () => {
+        jest.spyOn(utils,'deleteList').mockRejectedValue(new Error('Some Error!'));
+        try{
+            await services.deleteListService({}); 
+        } catch(err) {
+            expect(err.message).toBe('Some Error!');
+        }
+    });
+});

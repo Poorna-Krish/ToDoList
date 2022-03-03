@@ -109,11 +109,11 @@ describe('ChangeTaskHandler Function', () => {
 });
 describe('DeleteTaskHandler Function', () => {
     it('should return success message with status 200 if task deleted', async () => {
-        jest.spyOn(services,'deleteTaskService').mockResolvedValue([null, {listId: 1, id: 1}]);
+        jest.spyOn(services,'deleteTaskService').mockResolvedValue(1);
         const res = mockResponse();
         const req = {body: {listId: 1, id: 1}};
         await handlers.deleteTaskHandler(req,res);
-        expect(res.json).toHaveBeenCalledWith({deletedTask: {listId: 1, id: 1}});
+        expect(res.json).toHaveBeenCalledWith({deletedTask: `Deleted Task with Id 1!`});
         expect(res.status).toHaveBeenCalledWith(200);
     });
     it('should return error if some other error occurs', async() => {
@@ -122,6 +122,27 @@ describe('DeleteTaskHandler Function', () => {
         const req = {body: {listId: 1, id: 1}};
         try{
             await handlers.deleteTaskHandler(req, res);
+        } catch (err) {
+            expect(res.status).toHaveBeenCalledWith(err.httpCode);
+            expect(res.json).toHaveBeenCalledWith({error: `There's something wrong! GetTasks Failed: \n Error: Some error`});
+        }
+    });
+});
+describe('DeleteListHandler Function', () => {
+    it('should return success message with status 200 if List deleted', async () => {
+        jest.spyOn(services,'deleteListService').mockResolvedValue(1);
+        const res = mockResponse();
+        const req = {body: {id: 1}};
+        await handlers.deleteListHandler(req,res);
+        expect(res.json).toHaveBeenCalledWith({deletedList: `Deleted List with Id 1!`});
+        expect(res.status).toHaveBeenCalledWith(200);
+    });
+    it('should return error if some other error occurs', async() => {
+        jest.spyOn(services,'deleteListService').mockRejectedValue(new Error(`Some error`));
+        const res = mockResponse();
+        const req = {body: {listId: 1, id: 1}};
+        try{
+            await handlers.deleteListHandler(req, res);
         } catch (err) {
             expect(res.status).toHaveBeenCalledWith(err.httpCode);
             expect(res.json).toHaveBeenCalledWith({error: `There's something wrong! GetTasks Failed: \n Error: Some error`});
