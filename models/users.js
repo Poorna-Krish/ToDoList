@@ -5,7 +5,7 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Users extends Model {
     static associate({Users, Lists, UserLists}) {
-      Users.belongsToMany(Lists, {through: UserLists});
+      Users.belongsToMany(Lists, {through: UserLists, foreignKey: 'user_id'});
     }
   }
   Users.init({

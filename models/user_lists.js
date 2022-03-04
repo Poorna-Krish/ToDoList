@@ -2,15 +2,16 @@
 const {
   Model
 } = require('sequelize');
+const lists = require('./lists');
 module.exports = (sequelize, DataTypes) => {
   class UserLists extends Model {
     
-    static associate(models) {
-      
+    static associate({Lists,UserLists,Users}) {
+      UserLists.hasMany(Lists, {foreignKey:'id'});
+      UserLists.hasMany(Users, {foreignKey:'id'});
     }
   }
   UserLists.init({
-    
   }, 
   {
     sequelize,

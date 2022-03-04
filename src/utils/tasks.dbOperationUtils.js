@@ -1,4 +1,4 @@
-const {Lists, Tasks} = require('../../models');
+const {Lists, Tasks, Users, UserLists} = require('../../models');
 const {InputError} = require('../errors/tasks.errors');
 
 const createList = async(newListDetails) => {
@@ -40,6 +40,7 @@ const getAllLists = async () => {
 const getTasksFromList = async(searchListId) => {
     if(!searchListId) throw new InputError('InputError','Invalid, enter valid List Id!', 400);
     if(typeof searchListId !== 'number') throw new InputError('InputError','Invalid, List Id must be integer!', 400);
+    if(searchListId <= 0) throw new InputError('InputError','Invalid, List Id must valid integer!', 400);
     try{
         const tasks = await Tasks.findAll({
             where:{
@@ -104,6 +105,32 @@ const deleteList = async(listId) => {
     }
 }
 
+const getAllListsForUser = async(givenUserId) => {
+    if(!givenUserId) throw new InputError('Invalid, enter valid UserId!');
+    if(typeof givenUserId !== 'number') throw new InputError('Invalid, enter valid UserId!');
+    try{
+        const allListsForUser = await UserLists.findAll({
+            attributes: {exclude: ['createdAt', 'updatedAt','user_id','list_id']},
+            where: {
+                user_id: givenUserId
+            },
+            include: [{
+                model: Lists,
+                attributes: ['id','name']                
+            }]
+        });
+        if(allListsForUser.length === 0) throw new Error('Invalid, no User of that Id has a list!');
+        return allListsForUser;
+    } catch (err) {
+        throw new Error(`UserLists Error: ${err.message}`);
+    }
+}
+
+const addListForUser = async(givenDetails) => {
+    const list =  await UserLists.create({ list_id: givenDetails.listId, user_id: givenDetails.userId});
+    return list;
+}
+
 module.exports = {
     createTask,
     createList,
@@ -111,5 +138,7 @@ module.exports = {
     getTasksFromList,
     changeTask,
     deleteTask,
-    deleteList
+    deleteList,
+    getAllListsForUser,
+    addListForUser
 };

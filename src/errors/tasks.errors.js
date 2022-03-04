@@ -16,7 +16,16 @@ class HttpError extends Error {
       this.httpCode = httpCode;
     }
 }
+class NotFoundError extends Error { 
+  httpCode  
+  constructor(name, message) {
+    super();
+    this.name = name;
+    this.message = message;
+  }
+}
 module.exports = {
     HttpError,
-    InputError
+    InputError,
+    NotFoundError
 };

@@ -62,6 +62,19 @@ const deleteListService = async(listId) => {
     }
 }
 
+const getAllListsForUser = async(userId) => {
+    try{
+        const lists = await utils.getAllListsForUser(userId);
+        return lists;
+    } catch(err) {
+        throw err;
+    }
+}
+
+const addListForUser = async(givenDetails) => {
+    return await utils.addListForUser(givenDetails);
+}
+
 module.exports = {
   addTaskService,
   createListService,
@@ -69,5 +82,7 @@ module.exports = {
   getTasksFromListService,
   changeTaskService,
   deleteTaskService,
-  deleteListService
+  deleteListService,
+  getAllListsForUser,
+  addListForUser
 };

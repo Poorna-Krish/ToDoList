@@ -1,5 +1,5 @@
 const services = require('../services/tasks.services.js');
-const {InputError} = require('../errors/tasks.errors');
+const {InputError, NotFoundError} = require('../errors/tasks.errors');
 
 const getTasksFromListHandler = async(req, res) => {
     const id = req.params.id;
@@ -77,6 +77,30 @@ const deleteListHandler = async(req, res) => {
     }
 }
 
+const getAllListsForUser = async (req, res) => {
+    const userId = req.body.userId;
+    try{
+        const lists = await services.getAllListsForUser(userId);
+        res.json(lists).status(200);
+    } catch(err) {
+        res.json({error: `There's something wrong! Error: ${err.message}`}).status(400);
+    }
+}
+
+const addListForUser = async(req, res) => {
+    try{
+        if(!req.body) throw new InputError('InputError','Invalid request body!',400);
+        if(!req.body.listId) throw new InputError('InputError','Invalid list Id!',400);
+        if(!req.body.userId) throw new InputError('InputError','Invalid user Id!',400);
+        if(typeof req.body.listId !== 'number') throw new InputError('InputError','Invalid list Id!',400);
+        if(typeof req.body.userId !== 'number') throw new InputError('InputError','Invalid user Id!',400);
+        const list = await services.addListForUser(req.body);
+        res.json(list).status(200);
+    } catch(err) {
+        res.json({error: `There's something wrong! Error: ${err.message}`}).status(400);
+    }
+}
+
 module.exports = {
     getTasksFromListHandler,
     getAllListsHandler,
@@ -84,5 +108,7 @@ module.exports = {
     createListHandler,
     changeTaskHandler,
     deleteTaskHandler,
-    deleteListHandler
+    deleteListHandler,
+    getAllListsForUser,
+    addListForUser
 };

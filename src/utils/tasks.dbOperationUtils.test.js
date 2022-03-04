@@ -1,5 +1,5 @@
 const utils = require('./tasks.dbOperationUtils');
-const {Tasks,Lists} = require('../../models');
+const {Tasks, Lists, Users, UserLists} = require('../../models');
 
 describe('CreateList Function', () => {
     const testList = {name: 'Dummy list'};
@@ -105,21 +105,21 @@ describe('GetAllLists function', () => {
 describe('GetTasksFromList function', () => {
     it('should return all the tasks in the list in an array', async() =>{
         jest.spyOn(Tasks,'findAll').mockResolvedValue([1,2,3]);
-        expect(await utils.getTasksFromList()).toEqual([1,2,3]);
+        expect(await utils.getTasksFromList(1)).toEqual([1,2,3]);
     });
     it('should return message if list  does not exist', async() =>{
-        jest.spyOn(Tasks,'findAll').mockResolvedValue(0);
+        jest.spyOn(Tasks,'findAll').mockResolvedValue([]);
         try{
-            await utils.getTasksFromList(0);
+            await utils.getTasksFromList(1);
         } catch(err) {
-            expect(err.message).toBe('Invalid, no List of that Id exists!');
+            expect(err.message).toBe('Task Error: Invalid, no List of that Id exists!');
         }
     });
     it('should return error if input not given', async () => {
         try{
             await utils.getTasksFromList();
         }catch(err) {
-            expect(err.message).toBe('Invalid, enter valid List Id!!');
+            expect(err.message).toBe('Invalid, enter valid List Id!');
         }
     });
     it('should return error if List Id not number', async () => {
@@ -132,7 +132,7 @@ describe('GetTasksFromList function', () => {
     it('should throw error if some internal error', async () => {
         jest.spyOn(Tasks,'findAll').mockRejectedValue(new Error('Some error!'));
         try{
-            await utils.getTasksFromList();
+            await utils.getTasksFromList(1);
         } catch(err) {
             expect(err.message).toBe('Task Error: Some error!');
         }
@@ -274,6 +274,42 @@ describe('DeleteList Function', () => {
             await utils.deleteList(1);
         } catch(err) {
             expect(err.message).toBe(`List Error: Some error!`);
+        }
+    });
+});
+describe('GetAllListsForUser Function', () => {
+    it('should return array of lists for given userId', async () => {
+        jest.spyOn(UserLists,'findAll').mockResolvedValue([1,2,3]);
+        expect(await utils.getAllListsForUser(1)).toEqual([1,2,3]);
+    });
+    it('should return error if input not given', async () => {
+        try{
+            await utils.getAllListsForUser();
+        } catch(err) {
+            expect(err.message).toBe();
+        }
+    });
+    it('should return error if input userId not number', async () => {
+        try{
+            await utils.getAllListsForUser('hi');
+        } catch(err) {
+            expect(err.message).toBe();
+        }
+    });
+    it('should return error if no user of that id has a list', async () => {
+        jest.spyOn(UserLists,'findAll').mockResolvedValue([]);
+        try{
+            await utils.getAllListsForUser(1);
+        } catch(err) {
+            expect(err.message).toBe('UserLists Error: Invalid, no User of that Id has a list!');
+        }
+    });
+    it('should return error if other internal error', async () => {
+        jest.spyOn(UserLists,'findAll').mockRejectedValue(new Error('Some error!'));
+        try{
+            await utils.getAllListsForUser(1);
+        } catch(err) {
+            expect(err.message).toBe(`UserLists Error: Some error!`);
         }
     });
 });

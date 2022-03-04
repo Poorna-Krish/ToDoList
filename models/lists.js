@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       Lists.hasMany(Tasks, {
         foreignKey: 'list_id'
       })
-      Lists.belongsToMany(Users, {through: UserLists});
+      Lists.belongsToMany(Users, {through: UserLists, foreignKey: 'list_id', sourceKey: 'id'});
     }
   }
   Lists.init({

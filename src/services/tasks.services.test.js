@@ -105,3 +105,18 @@ describe('DeleteListService Function', () => {
         }
     });
 });
+
+describe('GetAllListsForUser Function', () => {
+    it('should call util getAllListsForUser function', async () => {
+        jest.spyOn(utils,'getAllListsForUser').mockResolvedValue(1);
+        expect(await services.getAllListsForUser(1)).toBe(1);
+    });
+    it('should throw error if some error', async () => {
+        jest.spyOn(utils,'getAllListsForUser').mockRejectedValue(new Error('Some Error!'));
+        try{
+            await services.getAllListsForUser(1); 
+        } catch(err) {
+            expect(err.message).toBe('Some Error!');
+        }
+    });
+});
