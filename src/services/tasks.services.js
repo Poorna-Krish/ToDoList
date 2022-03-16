@@ -19,7 +19,7 @@ const addTaskService = async (newTask) => {
 const getAllListsService = async () => {
     try{
         let lists = await utils.getAllLists();
-        lists = lists.map((list) => {return {[list.id]: list.name}});
+        // lists = lists.map((list) => {return {[list.id]: list.name}});
         return lists;
     } catch (err) {
         throw Error(err.message);
