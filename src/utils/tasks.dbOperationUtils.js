@@ -2,6 +2,7 @@ const {Lists, Tasks, Users, UserLists} = require('../../models');
 const {InputError} = require('../errors/tasks.errors');
 
 const createList = async(newListDetails) => {
+    // console.log(newListDetails.name);
     if(!newListDetails) throw new InputError('InputError','Invalid, enter valid list data!', 400);
     else{
         if(!newListDetails.name) throw new InputError('InputError','Invalid, enter valid list name!', 400);
@@ -41,17 +42,13 @@ const getTasksFromList = async(searchListId) => {
     if(!searchListId) throw new InputError('InputError','Invalid, enter valid List Id!', 400);
     if(typeof searchListId !== 'number') throw new InputError('InputError','Invalid, List Id must be integer!', 400);
     if(searchListId <= 0) throw new InputError('InputError','Invalid, List Id must valid integer!', 400);
-    try{
-        const tasks = await Tasks.findAll({
-            where:{
-                listId: searchListId
-            }
-        });
-        if(tasks.length === 0) throw new InputError('InputError','Invalid, no List of that Id exists!', 400);
-        return tasks;
-    } catch(err) {
-        throw new Error(`Task Error: ${err.message}`);
-    }
+    const tasks = await Tasks.findAll({
+        where:{
+            listId: searchListId
+        }
+    });
+    if(tasks.length === 0) throw new InputError('InputError','Invalid, no List of that Id exists!', 400);
+    return tasks;
 }
 
 const changeTask = async (taskDetails) => {

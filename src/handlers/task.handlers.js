@@ -3,10 +3,12 @@ const {InputError, NotFoundError} = require('../errors/tasks.errors');
 
 const getTasksFromListHandler = async(req, res) => {
     const id = req.params.id;
+    console.log(id);
     try{
         const tasks = await services.getTasksFromListService(id);
         res.status(200).json(tasks);
     } catch (err) {
+        console.log(err.message, ' ', err.httpCode);
         res.status(err.httpCode).json({error: `There's something wrong! GetTasks Failed: \n Error: ${err.message}`});
     }
 }
@@ -20,16 +22,13 @@ const getAllListsHandler = async (req, res) => {
     }
 };
 const createListHandler = async(req, res) => {
-    if(req)
-    {
         const newList = req.body;
         if(!newList) res.send(`Invalid, enter new list details in body!`).status(400);
         try{
             const newListId = await services.createListService(newList);
-            res.json({success: `New List with Id ${newListId} created!`}).status(200);
-        } catch(err) {
-            res.json({error:`There's something wrong! List Failed: \n Error: ${err.message}`}).status(err.httpCode);
-        }
+            res.json({success: `New List with Id ${newListId} created!`, newListId}).status(200);
+    } catch(err) {
+        res.json({error:`There's something wrong! List Failed: \n Error: ${err.message}`}).status(err.httpCode);
     }
 }
 const addTaskHandler = async (req, res) => {

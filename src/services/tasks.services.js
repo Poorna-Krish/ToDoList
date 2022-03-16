@@ -28,8 +28,8 @@ const getAllListsService = async () => {
 
 const getTasksFromListService = async (listId) => {
     try{
-        let tasks = await utils.getTasksFromList(listId);
-        tasks = tasks.map((task) => {return {[task.id] : task.title}});
+        let tasks = await utils.getTasksFromList(parseInt(listId, 10));
+        // tasks = tasks.map((task) => {return {[task.id] : task.title}});
         if(tasks.length === 0) throw new InputError('InputError', `No Tasks at that List ID!`, 400);
         return tasks;
     } catch (err) {
