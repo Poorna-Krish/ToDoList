@@ -36,8 +36,8 @@ const addTaskHandler = async (req, res) => {
     {
         const newTaskDetails = req.body;
         try{
-            const newTaskId = await services.addTaskService(newTaskDetails);
-            res.status(200).json({success: `New note added Successfully in list ${newTaskDetails.listId} with ID: ${newTaskId}!`});
+            const newTask = await services.addTaskService(newTaskDetails);
+            res.status(200).json({success: `New note added Successfully in list ${newTaskDetails.listId} with ID: ${newTask.id}!`, newTask});
         } catch (err) {
             res.json({error: `There's something wrong! Task Failed: \n Error: ${err.message}`}).status(err.httpCode);
         }

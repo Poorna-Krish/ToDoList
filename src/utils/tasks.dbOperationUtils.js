@@ -24,7 +24,7 @@ const createTask = async(task) => {
     else if(typeof task.listId !== 'number') throw new InputError('InputError','Invalid, enter valid List Id!', 400);
     try{
         const newTask = await Tasks.create({ listId: task.listId, title: task.title});
-        return newTask.id;
+        return newTask;
     } catch(err) {
         throw new Error(`Task Error: ${err.message}`);
     }
