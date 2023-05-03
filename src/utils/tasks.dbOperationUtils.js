@@ -47,7 +47,7 @@ const getTasksFromList = async(searchListId) => {
             listId: searchListId
         }
     });
-    if(tasks.length === 0) throw new InputError('InputError','Invalid, no List of that Id exists!', 400);
+    if(tasks.length === 0) throw new InputError('InputError','Invalid, no tasks for that list!', 400);
     return tasks;
 }
 
